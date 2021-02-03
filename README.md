@@ -4,6 +4,8 @@
 1. Ensure the operator is marked as certified
 2. Remove service accounts in any side loaded role bindings or cluster role bindings.
 3. Ensure the certification docker file has the required certification annotations
+4. Creates new bundle in directory `certification`
+5. Create a new certification docker file, namely `certification.Dockerfile`
 
 ## How to setup
 
