@@ -111,8 +111,11 @@ def parse_csv(document):
                 container["env"].append({'name':'ENABLE_WEBHOOKS','value':'false'})
                 print(container["env"])
 
-    if document["spec"]["webhookdefinitions"] and enable_webhooks == False:
-        del document["spec"]["webhookdefinitions"]
+    try:
+        if document["spec"]["webhookdefinitions"] and enable_webhooks == False:
+            del document["spec"]["webhookdefinitions"]
+    except KeyError:
+        pass
 
     write_manifest(name, document)
 
@@ -170,12 +173,14 @@ def copy_other_dirs(cert_dir):
         shutil.copytree(src, dst)
 
 def get_rbac_proxy_image():
-	with open('bundle/patches/related_images.yaml', 'r') as stream:
-		patch_file = yaml.safe_load(stream)
+    related_images = 'bundle/patches/related_images.yaml'
+    if os.path.exists(related_images):
+    	with open(related_images, 'r') as stream:
+    		patch_file = yaml.safe_load(stream)
 
-	for image in patch_file["spec"]["relatedImages"]:
-		if image["name"] == "kube-rbac-proxy":
-			return image["image"]
+    	for image in patch_file["spec"]["relatedImages"]:
+    		if image["name"] == "kube-rbac-proxy":
+    			return image["image"]
 
 if __name__ == '__main__':
     main()
